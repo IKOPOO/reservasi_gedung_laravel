@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
       // create 10 random users
-      User::factory()->count(10)->create();
+      User::factory()->count(5)->create();
 
       // create default admin user
       User::create([

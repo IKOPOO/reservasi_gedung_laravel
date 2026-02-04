@@ -21,15 +21,15 @@ Route::prefix('/auth')->group(function () {
 
 // public api routes for locations
 Route::prefix('location')->group(function () {
-    Route::get('/', [LocationController::class, 'index']);          // list locations
-    Route::get('/{id}', [LocationController::class, 'show']);       // detail location
-    Route::get('/filter/check', [LocationController::class, 'filter']);
+    Route::get('/', [LocationController::class, 'index']);          // get all locations
+    Route::get('/{id}', [LocationController::class, 'show']);       // get location by id
+    Route::get('/filter/check', [LocationController::class, 'filler']); //  get filtered location 
 });
 
 // public api routes for reservations
-Route::prefix('reservations')->group(function () {
-    Route::post('/store', [ReservationController::class, 'store']); // create reservation
-    Route::post('/check', [ReservationController::class, 'check']); // check reservation
+Route::prefix('reservations')->group(function () {     
+  Route::post('/store', [ReservationController::class, 'store']);
+  Route::post('/check', [ReservationController::class, 'check']); // check reservation
 });
 
 
@@ -40,9 +40,14 @@ Route::middleware('auth:api')->group(function (){
   Route::prefix('/auth')->group(function(){
     Route::post('/logout', [AuthController::class, 'logout']);
   });
+
+  // harus login terlebih dahulu 
+  // Route::prefix('/reservations')->group(function () {            
+  //   Route::post('/store', [ReservationController::class, 'store']);
+  // });
   
 
-  // admin only routes
+  // admin only routes -> hanya bisa di akses oleh admin
   Route::middleware('role:admin')->group(function () {
     // locations categories routes 
     Route::prefix('/locations-categories')->group(function () {
@@ -60,11 +65,12 @@ Route::middleware('auth:api')->group(function (){
     });
 
     // reservations
-    Route::prefix('/reservations')->group(function () {      
+    Route::prefix('/reservations')->group(function () {                  
       Route::get('/', [ReservationController::class, 'index']); // get all reservations
       Route::get('/filter/check', [ReservationController::class, 'filter']); // get  filter reservations      
       Route::delete('/{id}', [ReservationController::class, 'destroy']); // delete reservation
     });
-
+    
   });
+  
 });
